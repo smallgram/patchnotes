@@ -10,15 +10,19 @@ binDir = "bin"
 installExt = @["nim"]
 bin = @["patchnotes"]
 
-
 # Dependencies
 
 requires "nim >= 1.4.6"
-requires "regex >= 0.19.0"
-requires "npeg#e7bd87 "
+# requires "regex >= 0.19.0"
+requires "npeg#e7bd87"
 
+import os 
 
+# implement nimble-like test call, but with gorgex() for shorter errors 
 task test, "run tests":
-    let res = gorgeEx("testament --backendLogging:off p \"tests/*.nim\"")
-    echo res.output
-    # exec("testament --colors:off --backendLogging:off p \"tests/*.nim\"")
+    cd(thisDir())
+    for t in listFiles("tests"):
+        let (dir, fn, ext) = splitFile(t)
+        if fn.startsWith('t') and ext == ".nim":
+            let res = gorgeEx("nim c -r " & thisDir() / t) 
+            echo res.output

@@ -1,10 +1,11 @@
 ### GENERAL
 bin
 nimcache
-.vscode
 tests/*
 !tests/*.*
 testresults
+
+NOTES.md
 
 ### MACOS
 # General

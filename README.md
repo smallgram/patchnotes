@@ -24,4 +24,4 @@ This is mostly a project to practice various forms of pattern matching and parsi
 This parsing library makes use of the **excellent** [npeg](https://www.github.com/zevv/npeg) PEG library by [zevv](https://www.github.com/zevv).
 
 ## Running
-Tests can be run using the `nimble` and `testament` tools included with the standard Nim distribution (at least since v1.2). Easiest way to run the tests is to run `nimble test` from the project root. You can also directly run the tests contained in `tests/` using `testament`.
+Tests can be run using the `nimble` tool included with the standard Nim distribution. Easiest way to run the tests is to run `nimble test` from the project root. You can also directly run the tests contained in `tests/`.

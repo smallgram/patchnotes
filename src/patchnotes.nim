@@ -1,8 +1,9 @@
 import strformat
 import strutils
-import osproc
 
-import patchnotespkg/[common, message]
+import cligen
+
+import patchnotespkg/[common, message, log]
 
 
 when isMainModule:
@@ -15,10 +16,11 @@ when isMainModule:
   #       start: commit or tag string, if blank, use earliest commit
   #       end: commit or tag string, if blank, use most recent commit
 
-  let res = execCmdEx("git log --no-merges --abbrev-commit --format=medium",
-    {}, nil)
+  
+  
+  
 
   # TODO: parse git log here, passing it to a log parser which will
   #       return nice data structures to work with, or right here...
-  for line in res.output.splitLines:
-    echo line
+
+  dispatch(getGitLog)

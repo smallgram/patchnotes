@@ -14,4 +14,5 @@ bin = @["patchnotes"]
 
 requires "nim >= 1.4.6"
 # requires "regex >= 0.19.0"
+requires "cligen >= 1.5.0"
 requires "npeg#e7bd87"

@@ -1,6 +1,8 @@
 # Patchnotes
 A Conventional Changelog based parser for git commit messages.
 
+**⚠️ Warning: This tool is in-progress and currently useless! ⚠️**
+
 ## What is this?
 This is a library (and maybe a tool) that parses strings in a git message format based off of Conventional Changelog. The intent is to allow for some extra flexibility in how messages are formatted and to provide a few extra features.
 

@@ -2,6 +2,7 @@
 # git log settings
 import osproc
 import os
+import strutils
 
 
 type
@@ -29,15 +30,38 @@ proc getGitLog*(path: string = "", start: string = "", finish: string = ""): str
     rng, {}, nil)
 
   if res.exitCode == 0:
-    echo res.output
+    # echo res.output
     return res.output
   else:
-    echo "error generating git log. is this a git repository?"
-    return ""
+    raise newException(IOError, "Error generating git log. Is this a git " &
+                                "repository?")
 
 
-proc parseGitLog*(log: string): seq[Log] =
-  # TODO: go through the log string and extract logs
-  #       probably via a regex line-by-line, or possibly a PEG?
-  discard
-  
+iterator parseGitLog*(log: string): Log =
+  var res = Log()
+  for line in log.splitLines:
+    # echo "line: " & line
+    # echo "line length: " & $line.len
+    if line.startswith("commit"):
+      if res.commit != "":
+        res.message = res.message.dedent
+        yield res
+        res = Log()
+      let commit = line.split(" ")[1]
+      res.commit = commit 
+    else:
+      if res.commit != "":
+        if line.startswith("Author:"):
+          let author = line.split(" ")[1]
+          let email = line.split(" ")[2]
+          res.author = author
+          res.email = email
+        elif line.startswith("Date:"):
+          let date = line.split(":", 1)[1]
+          res.date = date.strip
+        elif line.startswith("    ") or line.len == 0: 
+          res.message.add line & '\n'
+        else:
+          echo "unrecognized line: " & line
+      else:
+        echo "unrecognized line: " & line

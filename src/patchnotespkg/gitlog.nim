@@ -3,6 +3,9 @@
 import osproc
 import os
 import strutils
+import message
+import json
+import std/jsonutils
 
 
 type
@@ -12,6 +15,7 @@ type
     email*: string
     date*: string
     message*: string
+    patchnote*: PatchNote
 
 
 proc getGitLog*(path: string = "", start: string = "", finish: string = ""): string =
@@ -45,6 +49,11 @@ iterator parseGitLog*(log: string): Log =
     if line.startswith("commit"):
       if res.commit != "":
         res.message = res.message.dedent
+        let pn = res.message.parseGitMessage()
+        if pn.len > 0:
+          res.patchnote = res.message.parseGitMessage()[0]
+        else:
+          res.patchnote = PatchNote()
         yield res
         res = Log()
       let commit = line.split(" ")[1]
@@ -65,3 +74,19 @@ iterator parseGitLog*(log: string): Log =
           echo "unrecognized line: " & line
       else:
         echo "unrecognized line: " & line
+
+# convert a Log to a Json node
+proc logToJson*(log: Log): JsonNode =
+  result = %*
+    {
+      "commit": log.commit,
+      "author": log.author,
+      "email": log.email,
+      "date": log.date,
+      "message": log.message,
+      "title": log.patchnote.title,
+      "body": log.patchnote.body,
+      "tag": log.patchnote.tag,
+      "scope": log.patchnote.scope,
+      "kind": log.patchnote.kind
+    }

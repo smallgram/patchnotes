@@ -2,6 +2,7 @@ import strformat
 import strutils
 import os
 import strformat
+import json
 
 # import cligen
 
@@ -18,13 +19,8 @@ when isMainModule:
   #       return nice data structures to work with, or right here...
   
   for log in getCurrentDir().getGitLog().parseGitLog():
-    echo fmt"""
-    {log.commit   = }
-    {log.author   = }
-    {log.email    = }
-    {log.date     = }
-    {log.message  = }
-    """.unindent
+    echo "-------"
+    echo log.logToJson.pretty
 
 
   # can use `dispatch` to create a CLI essentially

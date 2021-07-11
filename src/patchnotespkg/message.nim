@@ -51,11 +51,12 @@ proc parseGitMessage*(content: string): seq[PatchNote] =
     if res: # found a header
       result.add(p) 
     else: # found a non-header, parse as body
-      discard bodyParser.match(line, result[^1]).ok
+      if result.len > 0:
+        discard bodyParser.match(line, result[^1]).ok
 
 
 when isMainModule:
-  echo """feat(pub|Dev): This is a test.
+  discard """feat(pub|Dev): This is a test.
   fix: This is another test.
   This one also has another line.
   
@@ -66,4 +67,10 @@ when isMainModule:
   of text.
   
   fix2(Dev): This is a second one.
-  test(|Build): Testing.""".parseGitMessage
+  test(|Build): Testing."""
+  echo """
+
+  feat(pub|Dev): This is a test.
+
+  
+  """.parseGitMessage
